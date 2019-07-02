@@ -18,7 +18,6 @@ for q in range(n_clusters, n_clusters_max + 1):
 if len(groups.keys()) == 0:
     print('ERROR: NO (?,?) RESULTS FOUND')
 
-max_clusters = 0
 for group, group_result in groups.items():
     best_result = None
     best_crit = None
@@ -31,17 +30,26 @@ for group, group_result in groups.items():
         result['n_clusters'] = n_clusters
         result['n_clusters2'] = n_clusters2
         result['n_repeat'] = rep
-        print()
-        print(result)
+        #print()
+        #print(result)
+
         try:
-            clusters = open(group_run_prefix + 'cluster(%s)' % group).read()
+            Cclusters = open(group_run_prefix + 'Ccluster(%s)' % group).read().strip()
         except FileNotFoundError:
-            print('ERROR: NO CLUSTERS FOR %s' % group)
-            print(group_run_prefix + 'cluster(%s)' % group)
-            clusters = ''
-        print('clusters:', len(clusters), clusters)
-        max_clusters = max(len(clusters), max_clusters)
-        result['clusters'] = clusters
+            print('ERROR: NO C-CLUSTERS FOR %s' % group)
+            continue
+            Cclusters = ''
+        #print('Cclusters:', len(Cclusters), Cclusters)
+        result['Cclusters'] = Cclusters
+
+        try:
+            Rclusters = open(group_run_prefix + 'Rcluster(%s)' % group).read().strip()
+        except FileNotFoundError:
+            print('ERROR: NO R-CLUSTERS FOR %s' % group)
+            continue
+            Rclusters = ''
+        #print('Rclusters:', len(Rclusters), Rclusters)
+        result['Rclusters'] = Rclusters
 
         try:
             topics = open(group_run_prefix + 'beta(%s)' % group).read()
@@ -92,15 +100,19 @@ for group, group_result in groups.items():
     for key in best_result:
         group_result[key] = best_result[key]
 
-results = sorted(list(groups.items()), key=lambda x: x[1]['crit'])
+results = sorted([(k, g) for k, g in groups.items() if g], key=lambda x: x[1]['crit'])
 
-key, group_result = results[-1]
+for i in (-1,): #(-1, -2, -3):
+    key, group_result = results[i]
 
-print("best:", key)
-print('  > topics:', group_result['n_topics'])
-print('  > len(topics):', len(group_result['topics']))
-print('  > clusters:', group_result['n_clusters'])
-print('  > len(clusters):', len(group_result['clusters']))
-print('  > clusters2:', group_result['n_clusters2'])
-print('  > n_repeat:', group_result['n_repeat'])
-print('  > crit:', group_result['crit'])
+    print()
+    print('###################################')
+    print("best %s:" % i, key)
+    print('  > topics:', group_result['n_topics'])
+    print('  > len(topics):', len(group_result['topics']))
+    print('  > Cclusters:', group_result['n_clusters'])
+    print('       >', group_result['Cclusters'])
+    print('  > Rclusters:', group_result['n_clusters2'])
+    print('       >', group_result['Rclusters'])
+    print('  > n_repeat:', group_result['n_repeat'])
+    print('  > crit:', group_result['crit'])
