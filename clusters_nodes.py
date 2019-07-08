@@ -1,11 +1,12 @@
-import csv, json
+import csv, json, sys
 
 ## INPUT
 LABELS = json.load(open('example/labels')) # devrait être juste une liste de label mais bon
 EDGES = open("example/X.sp_mat").read() # sparse X
 
 ## OUTPUT
-CLUSTERS = open("example/out/0Ccluster(5,4,4)").read()
+TO_BE_DISPLAYED = sys.argv[1] # ex: 7Ccluster(5,5,2)
+CLUSTERS = open("example/out/" + TO_BE_DISPLAYED).read()
 
 
 

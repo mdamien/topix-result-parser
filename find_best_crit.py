@@ -97,6 +97,7 @@ for group, group_result in groups.items():
             best_result = result
             best_crit = crit
 
+    if not best_result: continue
     for key in best_result:
         group_result[key] = best_result[key]
 
@@ -116,3 +117,4 @@ for i in (-1,): #(-1, -2, -3):
     print('       >', group_result['Rclusters'])
     print('  > n_repeat:', group_result['n_repeat'])
     print('  > crit:', group_result['crit'])
+    print(' --# ', group_result['n_repeat'], 'Ccluster(', key, ')', sep='')
